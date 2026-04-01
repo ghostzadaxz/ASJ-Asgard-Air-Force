@@ -1,7 +1,6 @@
 # These two modules allow us to run a web server.
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from bmp180 import BMP180
 
 # Creates the necessary base app
 app = Flask(__name__)
@@ -12,20 +11,47 @@ socketio = SocketIO(app)
 def index():
     return render_template('index.html')
 
-bmp = BMP180()
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+@socketio.on('stopButton')
+def stop():
+    return True
+
+# BMP
+
+from bmp180 import BMP180
+
+bmp_sensor = BMP180()
+
+@socketio.on('bmpButton')
+def get_bmp():
+    return True
+
+@socketio.on('setZero')
+def zero():
+    zero_bmp = bmp_sensor.get_pressure()
 
 # Runs in the background to transmit data to connected clients.
 def background_thread():
     while True:
-        socketio.sleep(1)
-        barometricPressure = bmp.get_pressure()
-        socketio.emit(
-            'update_data',
-            {
-                'barometricPressure': barometricPressure
-            }
-        )
+        if get_bmp():
+            while True:
+                if stop():
+                    break
+                socketio.sleep(1)
+                bmp = bmp_sensor.get_pressure() / 100
+                altitude = bmp_sensor.get_altitude(sea_level_pressure = zero_bmp)
+                socketio.emit(
+                    'update_bmp',
+                    {
+                        'bmp': bmp
+                        'altitude': altitude
+                    }
+                )
+        if 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------        
+        
 # Runs when someone connects to the server - starts the background thread to update the data.
 @socketio.on('connect')
 def handle_connect():
