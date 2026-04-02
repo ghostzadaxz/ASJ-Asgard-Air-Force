@@ -13,9 +13,12 @@ def index():
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+stop = False
+bmp_runner = False
+
 @socketio.on('stopButton')
 def stop():
-    return True
+    global stop = True
 
 # BMP
 
@@ -24,11 +27,8 @@ from bmp180 import BMP180
 bmp_sensor = BMP180()
 
 @socketio.on('bmpButton')
-def get_bmp(msg):
-    if msg[start]:
-        return True
-    else:
-        return False
+def get_bmp():
+    global bmp_runner = True
 
 @socketio.on('setZero')
 def zero():
@@ -37,9 +37,11 @@ def zero():
 # Runs in the background to transmit data to connected clients.
 def background_thread():
     while True:
-        if get_bmp():
+        if bmp_runner:
             while True:
-                if stop():
+                if stop:
+                    stop = False
+                    bmp_runner = False
                     break
                 socketio.sleep(1)
                 bmp = bmp_sensor.get_pressure() / 100
@@ -62,7 +64,7 @@ def handle_connect():
 
 def main():
     # These specific arguments are required to make sure the webserver is hosted in a consistent spot, so don't change them unless you know what you're doing.
-    socketio.run(app, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=90, allow_unsafe_werkzeug=True)
     
 if __name__ == '__main__':
     main()
