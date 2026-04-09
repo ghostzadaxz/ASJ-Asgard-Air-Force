@@ -7,15 +7,22 @@
 <body>
     <h1>Asgard Air Force – Command Tower</h1><br>
     <button id="stopButton">Stop action</button><br><br>
+    
     <p><b>Barometric pressure: </b> <span id="bmp">Loading...</span> hPa</p>
     <p><b>Current altitude: </b> <span id="altitude">Loading...</span> m</p>
+    <p><b><i> &emsp; Altitude log: </i></b> <span id="altLog">Loading...</span> </p>
     <button id="setZero">Set zero altitude</button>
     <button id="bmpButton">Measure barometric pressure</button><br><br>
+    
     <p><b>Acceleration: </b> <span id="acc">Loading...</span> m/s²</p>
+    <p><b><i> &emsp; Acceleration log: </i></b> <span id="accLog">Loading...</span> </p>
     <p><b>Angle: </b> <span id="angle">Loading...</span> °</p>
+    <p><b><i> &emsp; Angle log: </i></b> <span id="angleLog">Loading...</span> </p>
     <button id="gyroButton">Measure acceleration & angle</button><br><br>
+    
     <p><b>Object's distance: </b> <span id="prox">Loading...</span> cm</p>
     <button id="proxButton">Measure distance</button><br><br>
+    
     <p><b>Camera: </b> <span id="cam">Loading...</span> </p>
     <button id="picButton">Take a picture</button>
     <button id="liveButton">Live recording</button>
@@ -40,9 +47,11 @@
 
             socket.on('update_bmp', function(msg) {
                 var bmpSpan = document.getElementById('bmp');                //assign var and gets ID previously defined (connects html & js by identification)
-                bmpSpan.textContent = msg.bmp});                            //sets value according to data sent by server (py)
+                bmpSpan.textContent = msg.bmp;                            //sets value according to data sent by server (py)
                 var altitudeSpan = document.getElementById('altitude');
                 altitudeSpan.textContent = msg.altitude;
+                var altLogSpan = document.getElementById('altLog');
+                altLogSpan.textContent = msg.altLog});                     //possible error due to 'msg' being a list/array
 
             // GYRO
             
@@ -52,9 +61,13 @@
 
             socket.on('update_gyro', function(msg) {
                 var accSpan = document.getElementById('acc');
-                accSpan.textContent = msg.acc});  
+                accSpan.textContent = msg.acc;  
                 var angleSpan = document.getElementById('angle');
                 angleSpan.textContent = msg.angle;
+                var accLogSpan = document.getElementById('accLog');
+                accLogSpan.textContent = msg.accLog;                        //possible error due to 'msg' being a list/array
+                var angleLogSpan = document.getElementById('angleLog');
+                angleLogSpan.textContent = msg.angleLog});                  //possible error due to 'msg' being a list/array
 
             // PROXIMITY
 
