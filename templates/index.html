@@ -18,6 +18,8 @@
     <p><b><i> &emsp; Acceleration log: </i></b> <span id="accLog">Loading...</span> </p>
     <p><b>Angle: </b> <span id="angle">Loading...</span> °</p>
     <p><b><i> &emsp; Angle log: </i></b> <span id="angleLog">Loading...</span> </p>
+    <p><b>Current position: </b> <span id="pos">Loading...</span> </p>
+    <p><b><i> &emsp; Position log: </i></b> <span id="posLog">Loading...</span> </p>
     <button id="gyroButton">Measure acceleration & angle</button><br><br>
     
     <p><b>Object's distance: </b> <span id="prox">Loading...</span> cm</p>
@@ -64,10 +66,14 @@
                 accSpan.textContent = msg.acc;  
                 var angleSpan = document.getElementById('angle');
                 angleSpan.textContent = msg.angle;
+                var posSpan = document.getElementById('pos');
+                posSpan.textContent = msg.pos;
                 var accLogSpan = document.getElementById('accLog');
                 accLogSpan.textContent = msg.accLog;                        //possible error due to 'msg' being a list/array
                 var angleLogSpan = document.getElementById('angleLog');
                 angleLogSpan.textContent = msg.angleLog});                  //possible error due to 'msg' being a list/array
+                var posLogSpan = document.getElementById('posLog');
+                posLogSpan.textContent = msg.posLog;
 
             // PROXIMITY
 
