@@ -96,7 +96,11 @@ def background_thread():
                 z_vel = vel_log[-1][2] + ((acc_log[-2][2] + acc_log[-1][2]) / 2) * 2
                 vel_data = (x_vel, y_vel, z_vel)
                 vel_log.append(vel_data)
-                
+                x_pos = pos_log[-1][0] + ((vel_log[-2][0] + vel_log[-1][0]) / 2) * 2
+                y_pos = pos_log[-1][1] + ((vel_log[-2][1] + vel_log[-1][1]) / 2) * 2
+                z_pos = pos_log[-1][2] + ((vel_log[-2][2] + vel_log[-1][2]) / 2) * 2
+                pos_data = (x_pos, y_pos, z_pos)
+                pos_log.append(pos_data)
                 
                 socketio.emit(
                     'update_gyro',
@@ -104,7 +108,10 @@ def background_thread():
                         'acc': acc,
                         'accLog': acc_log,            # possible error due to conversion list/tuple to array
                         'angle': angle,
-                        'angleLog': angle_log         # possible error due to conversion list/tuple to array
+                        'angleLog': angle_log,         # possible error due to conversion list/tuple to array
+                        'pos': pos_data,
+                        'posLog': pos_log
+                        
                     }
                 )
 
